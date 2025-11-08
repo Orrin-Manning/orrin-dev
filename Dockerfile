@@ -6,9 +6,9 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Install dependencies
 COPY pyproject.toml uv.lock /code/
-RUN uv sync --frozen --no-install-project
+RUN uv sync --frozen
 
 # Copy application
 COPY ./app /code/app
 
-CMD ["uv", "run", "fastapi", "run", "app/main.py", "--port", "80"]
+CMD ["uv", "run", "fastapi", "run", "app/main.py", "--port", "8000"]
