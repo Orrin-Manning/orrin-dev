@@ -35,7 +35,31 @@ docker compose --profile dev up
 
 Production mode (with nginx reverse proxy on port 80):
 ```bash
+# First time: Create .env file with production credentials
+cp .env.example .env
+# Edit .env with secure credentials for PROD_POSTGRES_USER and PROD_POSTGRES_PASSWORD
+
 docker compose --profile prod up --build
+```
+
+**Connecting to PostgreSQL:**
+
+Development (local):
+```bash
+# If psql installed locally
+psql postgresql://devuser:devpass@localhost:5432/orrin_dev
+
+# Or via Docker
+docker compose exec postgres-dev psql -U devuser -d orrin_dev
+```
+
+Production (on Pi via SSH tunnel):
+```bash
+# Terminal 1: Create SSH tunnel
+ssh -L 5433:localhost:5432 pi@your-pi-ip
+
+# Terminal 2: Connect via tunnel
+psql postgresql://[username]:[password]@localhost:5433/orrin_prod
 ```
 
 ### Dependency Management
@@ -96,17 +120,42 @@ The FastAPI application is initialized in `app/main.py` and integrates three rou
 The application uses Docker Compose with two profiles:
 
 **Development Profile (`dev`):**
+- **postgres-dev**: PostgreSQL 18 database
+  - Exposed on port 5432 for local access
+  - Credentials: `devuser:devpass` (can be overridden via `.env`)
+  - Database: `orrin_dev`
+  - Persistent data via Docker volume `postgres-dev-data`
 - **app-dev**: FastAPI application with hot reload
-- Source code mounted as volume for live updates
-- Direct access on port 8000
-- Runs `fastapi dev` command
+  - Source code mounted as volume for live updates
+  - Direct access on port 8000
+  - Runs `fastapi dev` command
+  - `DATABASE_URL` environment variable provided
 
 **Production Profile (`prod`):**
+- **postgres-prod**: PostgreSQL 18 database
+  - Internal only (not exposed outside Docker network)
+  - Credentials: **Must be set via `.env` file** (no defaults)
+  - Database: `orrin_prod`
+  - Persistent data via Docker volume `postgres-prod-data`
 - **app-prod**: FastAPI application in production mode
+  - `DATABASE_URL` environment variable provided
 - **nginx**: Reverse proxy routing traffic to the app
-- Configuration: `nginx.conf` proxies requests to `app-prod:8000`
-- Domain: Configured for `orrin.dev` and `www.orrin.dev`
-- Accessible on port 80 through nginx
+  - Configuration: `nginx.conf` proxies requests to `app-prod:8000`
+  - Domain: Configured for `orrin.dev` and `www.orrin.dev`
+  - Accessible on port 80 through nginx
+
+**Environment Variables:**
+
+See `.env.example` for required variables. Production requires a `.env` file with secure credentials:
+- `PROD_POSTGRES_USER` (required, no default)
+- `PROD_POSTGRES_PASSWORD` (required, no default)
+- `PROD_POSTGRES_DB` (default: `orrin_prod`)
+
+Development has sensible defaults but can be customized:
+- `DEV_POSTGRES_USER` (default: `devuser`)
+- `DEV_POSTGRES_PASSWORD` (default: `devpass`)
+- `DEV_POSTGRES_DB` (default: `orrin_dev`)
+- `DEV_POSTGRES_PORT` (default: `5432`)
 
 ### Authentication
 
@@ -120,6 +169,7 @@ Currently uses a simple token-based auth via the `get_token_header` dependency:
 - **Web Framework**: FastAPI with standard extras
 - **GraphQL**: Strawberry GraphQL
 - **Templates**: Jinja2
+- **Database**: PostgreSQL 18 (via Docker)
 - **ML Libraries**: NumPy, Pandas, Scikit-learn, PyTorch (torchvision), Matplotlib
 - **Development**: Jupyter, Ruff
 - **Deployment**: Docker, nginx, uv package manager

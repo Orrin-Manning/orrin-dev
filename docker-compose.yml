@@ -1,4 +1,21 @@
 services:
+  postgres-dev:
+    profiles: ["dev"]
+    image: postgres:18-alpine
+    environment:
+      - POSTGRES_USER=${DEV_POSTGRES_USER:-devuser}
+      - POSTGRES_PASSWORD=${DEV_POSTGRES_PASSWORD:-devpass}
+      - POSTGRES_DB=${DEV_POSTGRES_DB:-orrin_dev}
+    ports:
+      - "${DEV_POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DEV_POSTGRES_USER:-devuser} -d ${DEV_POSTGRES_DB:-orrin_dev}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app-dev:
     profiles: ["dev"]
     build: .
@@ -9,6 +26,26 @@ services:
       - "8000:8000"
     environment:
       - ENV=development
+      - DATABASE_URL=postgresql://${DEV_POSTGRES_USER:-devuser}:${DEV_POSTGRES_PASSWORD:-devpass}@postgres-dev:5432/${DEV_POSTGRES_DB:-orrin_dev}
+    depends_on:
+      postgres-dev:
+        condition: service_healthy
+
+  postgres-prod:
+    profiles: ["prod"]
+    image: postgres:18-alpine
+    environment:
+      - POSTGRES_USER=${PROD_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${PROD_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${PROD_POSTGRES_DB:-orrin_prod}
+    volumes:
+      - postgres-prod-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PROD_POSTGRES_USER} -d ${PROD_POSTGRES_DB:-orrin_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
   app-prod:
     profiles: ["prod"]
@@ -16,6 +53,10 @@ services:
     command: uv run fastapi run app/main.py --host 0.0.0.0 --port 8000
     environment:
       - ENV=production
+      - DATABASE_URL=postgresql://${PROD_POSTGRES_USER}:${PROD_POSTGRES_PASSWORD}@postgres-prod:5432/${PROD_POSTGRES_DB:-orrin_prod}
+    depends_on:
+      postgres-prod:
+        condition: service_healthy
     restart: unless-stopped
 
   nginx:
@@ -28,3 +69,7 @@ services:
     depends_on:
       - app-prod
     restart: unless-stopped
+
+volumes:
+  postgres-dev-data:
+  postgres-prod-data:
