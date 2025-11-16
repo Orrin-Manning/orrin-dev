@@ -12,4 +12,23 @@
 - [ ] Model evaluation and validation
 
 ## Setup
-Python 3.13 with venv
+
+### Local Development
+```bash
+# Install dependencies
+uv sync
+
+# Run development server
+uv run fastapi dev app/main.py
+```
+
+### Docker Development
+```bash
+# Development mode (hot reload on port 8000)
+docker compose --profile dev up
+
+# Production mode (nginx on port 80)
+docker compose --profile prod up --build
+```
+
+See [CLAUDE.md](CLAUDE.md) for detailed documentation.

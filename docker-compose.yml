@@ -1,14 +1,30 @@
 services:
-  app:
+  app-dev:
+    profiles: ["dev"]
     build: .
+    command: uv run fastapi dev app/main.py --host 0.0.0.0
+    volumes:
+      - .:/app  # Mount source code for hot reload
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=development
+
+  app-prod:
+    profiles: ["prod"]
+    build: .
+    command: uv run fastapi run app/main.py --host 0.0.0.0 --port 8000
+    environment:
+      - ENV=production
     restart: unless-stopped
 
   nginx:
+    profiles: ["prod"]
     image: nginx:alpine
     ports:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - app
+      - app-prod
     restart: unless-stopped

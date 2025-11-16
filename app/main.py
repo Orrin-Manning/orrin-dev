@@ -5,8 +5,7 @@ from strawberry.fastapi import GraphQLRouter
 from app.graphql.schema import schema
 from app.graphql.context import get_context
 from app.web.routes import pages
-from app.api.routes import health
-from .api.routes import item
+from app.api.routes import health, item
 
 app = FastAPI()
 

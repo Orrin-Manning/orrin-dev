@@ -26,11 +26,17 @@ uv run fastapi dev app/main.py
 uv run fastapi run app/main.py --port 8000
 ```
 
-**Docker Compose (with nginx reverse proxy):**
+**Docker Compose:**
+
+Development mode (hot reload, direct access on port 8000):
 ```bash
-docker-compose up --build
+docker compose --profile dev up
 ```
-The app will be accessible on port 80 through nginx, which proxies to the FastAPI app running on port 8000.
+
+Production mode (with nginx reverse proxy on port 80):
+```bash
+docker compose --profile prod up --build
+```
 
 ### Dependency Management
 
@@ -87,11 +93,20 @@ The FastAPI application is initialized in `app/main.py` and integrates three rou
 
 ### Docker Setup
 
-The application uses a multi-container setup:
-- **app**: FastAPI application (Python 3.14-slim with uv)
+The application uses Docker Compose with two profiles:
+
+**Development Profile (`dev`):**
+- **app-dev**: FastAPI application with hot reload
+- Source code mounted as volume for live updates
+- Direct access on port 8000
+- Runs `fastapi dev` command
+
+**Production Profile (`prod`):**
+- **app-prod**: FastAPI application in production mode
 - **nginx**: Reverse proxy routing traffic to the app
-- Configuration: `nginx.conf` proxies requests to `app:8000`
+- Configuration: `nginx.conf` proxies requests to `app-prod:8000`
 - Domain: Configured for `orrin.dev` and `www.orrin.dev`
+- Accessible on port 80 through nginx
 
 ### Authentication
 
