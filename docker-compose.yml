@@ -22,11 +22,13 @@ services:
     command: uv run fastapi dev app/main.py --host 0.0.0.0
     volumes:
       - .:/code  # Mount source code for hot reload
+      - app-dev-venv:/code/.venv  # Persist venv separately to avoid conflicts
     ports:
       - "8000:8000"
     environment:
       - ENV=development
-      - DATABASE_URL=postgresql://${DEV_POSTGRES_USER:-devuser}:${DEV_POSTGRES_PASSWORD:-devpass}@postgres-dev:5432/${DEV_POSTGRES_DB:-orrin_dev}
+      - DATABASE_URL=postgresql+asyncpg://${DEV_POSTGRES_USER:-devuser}:${DEV_POSTGRES_PASSWORD:-devpass}@postgres-dev:5432/${DEV_POSTGRES_DB:-orrin_dev}
+      - UV_LINK_MODE=copy  # Suppress hardlink warning on macOS Docker volumes
     depends_on:
       postgres-dev:
         condition: service_healthy
@@ -53,7 +55,7 @@ services:
     command: uv run fastapi run app/main.py --host 0.0.0.0 --port 8000
     environment:
       - ENV=production
-      - DATABASE_URL=postgresql://${PROD_POSTGRES_USER}:${PROD_POSTGRES_PASSWORD}@postgres-prod:5432/${PROD_POSTGRES_DB:-orrin_prod}
+      - DATABASE_URL=postgresql+asyncpg://${PROD_POSTGRES_USER}:${PROD_POSTGRES_PASSWORD}@postgres-prod:5432/${PROD_POSTGRES_DB:-orrin_prod}
     depends_on:
       postgres-prod:
         condition: service_healthy
@@ -73,3 +75,4 @@ services:
 volumes:
   postgres-dev-data:
   postgres-prod-data:
+  app-dev-venv:
