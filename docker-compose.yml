@@ -21,7 +21,7 @@ services:
     build: .
     command: uv run fastapi dev app/main.py --host 0.0.0.0
     volumes:
-      - .:/app  # Mount source code for hot reload
+      - .:/code  # Mount source code for hot reload
     ports:
       - "8000:8000"
     environment:

@@ -165,7 +165,7 @@ Currently uses a simple token-based auth via the `get_token_header` dependency:
 
 ## Technology Stack
 
-- **Python**: 3.14+
+- **Python**: 3.13+
 - **Web Framework**: FastAPI with standard extras
 - **GraphQL**: Strawberry GraphQL
 - **Templates**: Jinja2
