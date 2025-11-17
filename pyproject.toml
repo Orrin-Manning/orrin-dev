@@ -5,14 +5,22 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "alembic>=1.17.2",
+    "asyncpg>=0.30.0",
+    "bcrypt<5.0",
     "fastapi[standard]>=0.120.4",
+    "itsdangerous>=2.2.0",
     "jinja2>=3.1.6",
     "jupyter>=1.1.1",
     "matplotlib>=3.10.7",
     "numpy>=2.3.4",
     "pandas>=2.3.3",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic-settings>=2.12.0",
+    "python-multipart>=0.0.20",
     "ruff>=0.14.3",
     "scikit-learn>=1.7.2",
+    "sqlalchemy[asyncio]>=2.0.44",
     "strawberry-graphql[cli]>=0.284.1",
     "torchvision>=0.24.0",
 ]

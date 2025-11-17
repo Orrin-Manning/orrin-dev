@@ -98,7 +98,8 @@ The FastAPI application is initialized in `app/main.py` and integrates three rou
 
 2. **REST API Routes** (`app/api/routes/`): JSON endpoints with OpenAPI documentation
    - `health.py`: Health check endpoint
-   - `item.py`: Item management (uses dependency injection for auth via `get_token_header`)
+   - `item.py`: Item management (uses legacy token auth via `get_token_header`)
+   - `auth.py`: Authentication endpoints (register, login, logout, me)
    - Dependencies defined in `app/api/dependencies.py`
 
 3. **GraphQL** (`app/graphql/`): Strawberry GraphQL mounted at `/graphql`
@@ -146,7 +147,13 @@ The application uses Docker Compose with two profiles:
 
 **Environment Variables:**
 
-See `.env.example` for required variables. Production requires a `.env` file with secure credentials:
+See `.env.example` for required variables.
+
+Application settings:
+- `SECRET_KEY` - Secret key for session signing (change in production!)
+- `DATABASE_URL` - PostgreSQL async connection string
+
+Production requires a `.env` file with secure credentials:
 - `PROD_POSTGRES_USER` (required, no default)
 - `PROD_POSTGRES_PASSWORD` (required, no default)
 - `PROD_POSTGRES_DB` (default: `orrin_prod`)
@@ -159,9 +166,40 @@ Development has sensible defaults but can be customized:
 
 ### Authentication
 
-Currently uses a simple token-based auth via the `get_token_header` dependency:
-- Protected routes require `X-Token` header
-- Token value: `"fake-super-secret-token"` (hardcoded, development only)
+The application uses **session-based authentication** with the following components:
+
+**Database Layer:**
+- User model: `app/db/models/user.py` (email, hashed_password, full_name, timestamps)
+- CRUD operations: `app/db/crud/user.py` (create_user, authenticate_user, get_user_by_email, get_user_by_id)
+- Password hashing: `app/core/security.py` using bcrypt via passlib
+
+**Authentication Endpoints (REST API):**
+- `POST /api/auth/register` - Register new user (auto-login)
+- `POST /api/auth/login` - Authenticate and create session
+- `POST /api/auth/logout` - Clear session
+- `GET /api/auth/me` - Get current user info
+
+**Web Routes (HTML):**
+- `GET/POST /register` - Registration page and form submission
+- `GET/POST /login` - Login page and form submission
+- `GET /logout` - Logout and redirect
+
+**Session Management:**
+- Uses Starlette's `SessionMiddleware` with SECRET_KEY from settings
+- User ID stored in session: `request.session["user_id"]`
+- Dependencies in `app/api/dependencies.py`:
+  - `get_current_user()` - Returns User or raises 401
+  - `get_current_user_optional()` - Returns User or None
+  - `get_token_header()` - Legacy token auth (kept for backwards compatibility with item routes)
+
+**Database Migrations:**
+- Alembic configured for async SQLAlchemy
+- Run migrations: `uv run alembic upgrade head`
+- Create new migration: `uv run alembic revision --autogenerate -m "description"`
+
+**Configuration:**
+- `SECRET_KEY` - Required for session security (set in .env)
+- `DATABASE_URL` - PostgreSQL connection string (default: dev database)
 
 ## Technology Stack
 
@@ -169,7 +207,8 @@ Currently uses a simple token-based auth via the `get_token_header` dependency:
 - **Web Framework**: FastAPI with standard extras
 - **GraphQL**: Strawberry GraphQL
 - **Templates**: Jinja2
-- **Database**: PostgreSQL 18 (via Docker)
+- **Database**: PostgreSQL 18 (via Docker), SQLAlchemy (async), Alembic (migrations)
+- **Authentication**: Session-based auth, Passlib (bcrypt password hashing)
 - **ML Libraries**: NumPy, Pandas, Scikit-learn, PyTorch (torchvision), Matplotlib
 - **Development**: Jupyter, Ruff
 - **Deployment**: Docker, nginx, uv package manager
