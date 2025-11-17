@@ -85,6 +85,53 @@ uv run ruff check .
 uv run ruff format .
 ```
 
+### Issue Tracking with GitLab
+
+This project uses GitLab for issue tracking. The `glab` CLI tool is installed and configured.
+
+**Viewing issues:**
+```bash
+# List all open issues
+glab issue list
+
+# List security issues by priority
+glab issue list --label security
+glab issue list --label critical
+glab issue list --label high
+glab issue list --label medium
+
+# View specific issue details
+glab issue view <issue-number>
+
+# View issue in browser
+glab issue view <issue-number> --web
+```
+
+**Working on issues:**
+```bash
+# Create a branch for an issue
+glab issue view <issue-number>
+# Then create branch: git checkout -b issue-<number>-description
+
+# Close an issue after fix
+glab issue close <issue-number> --comment "Fixed by implementing..."
+```
+
+**Security Issues:**
+Issues #1-13 track security vulnerabilities and bugs identified in the authentication system:
+- **Critical (3 issues)**: #1 (CSRF), #2 (SECRET_KEY), #3 (Session Fixation)
+- **High (2 issues)**: #4 (Error Messages), #5 (Timing Attack)
+- **Medium (4 issues)**: #6-9 (User Enumeration, Rate Limiting, Security Headers, Session Config)
+- **Low (2 issues)**: #10-11 (Password Requirements, Account Lockout)
+- **Bugs (2 issues)**: #12-13 (Password Truncation, Exception Handling)
+
+**IMPORTANT**: When starting a new Claude Code session to work on these issues, use explicit prompts like:
+- "Use glab to list all security issues"
+- "Fetch GitLab issue #1 with glab and let's implement the fix"
+- "Run 'glab issue list --label critical' and show the results"
+
+Simply saying "list security issues" will trigger a fresh security audit instead of fetching existing GitLab issues.
+
 ## Architecture
 
 ### Application Structure
