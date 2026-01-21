@@ -7,6 +7,7 @@ from app.db.crud.user import create_user, authenticate_user, get_user_by_email
 from app.schemas.user import UserCreate, UserLogin, UserResponse
 from app.api.dependencies import get_current_user
 from app.db.models.user import User
+from app.core.session import regenerate_session
 
 router = APIRouter(
     prefix="/api/auth",
@@ -32,7 +33,8 @@ async def register(
     # Create the user
     user = await create_user(db, user_create)
 
-    # Automatically log in the new user
+    # Regenerate session to prevent session fixation, then log in
+    regenerate_session(request)
     request.session["user_id"] = user.id
 
     return user
@@ -53,7 +55,8 @@ async def login(
             detail="Incorrect email or password",
         )
 
-    # Create session
+    # Regenerate session to prevent session fixation, then log in
+    regenerate_session(request)
     request.session["user_id"] = user.id
 
     return user

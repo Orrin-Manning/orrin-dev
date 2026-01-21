@@ -8,6 +8,7 @@ from app.db.session import get_db
 from app.db.crud.user import create_user, authenticate_user, get_user_by_email
 from app.schemas.user import UserCreate
 from app.core.csrf import generate_csrf_token, validate_csrf_token
+from app.core.session import regenerate_session
 
 router = APIRouter(include_in_schema=False)
 templates = Jinja2Templates(directory="app/web/templates")
@@ -75,7 +76,8 @@ async def register_submit(
         user_create = UserCreate(email=email, password=password, full_name=full_name)
         user = await create_user(db, user_create)
 
-        # Automatically log in the new user
+        # Regenerate session to prevent session fixation, then log in
+        regenerate_session(request)
         request.session["user_id"] = user.id
 
         # Redirect to home page
@@ -129,7 +131,8 @@ async def login_submit(
             context={"error": "Incorrect email or password", "csrf_token": new_csrf_token},
         )
 
-    # Create session
+    # Regenerate session to prevent session fixation, then log in
+    regenerate_session(request)
     request.session["user_id"] = user.id
 
     # Redirect to home page
