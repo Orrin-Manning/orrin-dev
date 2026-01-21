@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing_extensions import Annotated
 
 from app.db.session import get_db
-from app.db.crud.user import create_user, authenticate_user, get_user_by_email
+from app.db.crud.user import create_user, authenticate_user, get_user_by_email, get_user_by_id
 from app.schemas.user import UserCreate
 from app.core.csrf import generate_csrf_token, validate_csrf_token
 from app.core.session import regenerate_session
@@ -15,9 +15,13 @@ templates = Jinja2Templates(directory="app/web/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-async def home(request: Request):
+async def home(request: Request, db: AsyncSession = Depends(get_db)):
+    user = None
+    user_id = request.session.get("user_id")
+    if user_id:
+        user = await get_user_by_id(db, user_id)
     return templates.TemplateResponse(
-        request=request, name="home.html", context={}
+        request=request, name="home.html", context={"user": user}
     )
 
 
