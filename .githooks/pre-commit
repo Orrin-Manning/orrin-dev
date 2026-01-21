@@ -1,0 +1,10 @@
+#!/bin/sh
+# Pre-commit hook: run tests and linting before allowing commit
+
+echo "Running linter..."
+uv run ruff check . || exit 1
+
+echo "Running tests..."
+uv run pytest -q || exit 1
+
+echo "All checks passed!"
