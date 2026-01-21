@@ -55,6 +55,8 @@ services:
     command: uv run fastapi run app/main.py --host 0.0.0.0 --port 8000
     environment:
       - ENV=production
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY}
       - DATABASE_URL=postgresql+asyncpg://${PROD_POSTGRES_USER}:${PROD_POSTGRES_PASSWORD}@postgres-prod:5432/${PROD_POSTGRES_DB:-orrin_prod}
     depends_on:
       postgres-prod:
