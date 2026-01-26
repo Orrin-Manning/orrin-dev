@@ -27,6 +27,7 @@ services:
       - "8000:8000"
     environment:
       - ENV=development
+      - SECRET_KEY=${SECRET_KEY:-dev-only-secret-key-minimum-32-chars}
       - DATABASE_URL=postgresql+asyncpg://${DEV_POSTGRES_USER:-devuser}:${DEV_POSTGRES_PASSWORD:-devpass}@postgres-dev:5432/${DEV_POSTGRES_DB:-orrin_dev}
       - UV_LINK_MODE=copy  # Suppress hardlink warning on macOS Docker volumes
     depends_on:
