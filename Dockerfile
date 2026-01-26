@@ -1,5 +1,12 @@
-FROM python:3.13-slim
+FROM python:3.14-slim
 WORKDIR /code
+
+# TODO: Remove gcc once asyncpg has Python 3.14 wheels (check https://pypi.org/project/asyncpg/#files for cp314)
+# Install build dependencies for packages that need compilation (asyncpg, etc.)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libc-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
