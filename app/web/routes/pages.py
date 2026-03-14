@@ -7,13 +7,13 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing_extensions import Annotated
 
-logger = logging.getLogger(__name__)
-
-from app.db.session import get_db
-from app.db.crud.user import create_user, authenticate_user, get_user_by_email, get_user_by_id
-from app.schemas.user import UserCreate
 from app.core.csrf import generate_csrf_token, validate_csrf_token
 from app.core.session import regenerate_session
+from app.db.crud.user import create_user, authenticate_user, get_user_by_email, get_user_by_id
+from app.db.session import get_db
+from app.schemas.user import UserCreate
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(include_in_schema=False)
 templates = Jinja2Templates(directory="app/web/templates")
