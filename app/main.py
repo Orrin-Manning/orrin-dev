@@ -39,6 +39,7 @@ app.mount("/static", StaticFiles(directory="app/web/static"), name="static")
 graphql_app = GraphQLRouter(
     schema,
     context_getter=get_context,
+    graphiql=settings.DEBUG,
 )
 app.include_router(graphql_app, prefix="/graphql")
 
