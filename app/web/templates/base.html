@@ -1,46 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ML App{% endblock %}</title>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {}
-            }
-        }
-    </script>
-
-    <!-- HTMX -->
-    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
-
-    {% block extra_head %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Orrin Dev{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
+  {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex justify-between items-center h-14">
-                <a href="/" class="text-lg font-semibold text-gray-900">ML Learning</a>
-                <div class="flex items-center space-x-4">
-                    {% if user %}
-                        <span class="text-sm text-gray-600">{{ user.full_name or user.email }}</span>
-                        <a href="/logout" class="text-sm text-gray-600 hover:text-gray-900">Logout</a>
-                    {% else %}
-                        <a href="/login" class="text-sm text-gray-600 hover:text-gray-900">Login</a>
-                        <a href="/register" class="text-sm px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700">Register</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </nav>
+<body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__brand">orrin.dev</a>
+      <div class="nav__links">
+        {% if user %}
+          <span class="nav__link">{{ user.full_name or user.email }}</span>
+          <a href="/logout" class="nav__link">Logout</a>
+        {% else %}
+          <a href="/login" class="nav__link">Login</a>
+          <a href="/register" class="btn btn--primary btn--sm">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
 
-    {% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 
-    {% block extra_scripts %}{% endblock %}
+  {% block extra_scripts %}{% endblock %}
 </body>
 </html>
