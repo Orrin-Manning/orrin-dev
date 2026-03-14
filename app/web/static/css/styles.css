@@ -1,6 +1,6 @@
 @import url('variables.css');
 
-/* ─── Reset ─────────────────────────────────────────────── */
+/* ─── Reset ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* ─── Base ───────────────────────────────────────────────── */
@@ -19,25 +19,11 @@ a {
 }
 a:hover { text-decoration: underline; }
 
-h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; }
-h1 { font-size: var(--text-4xl); }
-h2 { font-size: var(--text-3xl); }
-h3 { font-size: var(--text-xl); }
-h4 { font-size: var(--text-lg); }
-
-small { font-size: var(--text-sm); color: var(--color-text-muted); }
-
-/* ─── Layout ─────────────────────────────────────────────── */
-.container {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--container-padding);
-}
-
-.page {
-  padding: var(--space-12) var(--container-padding);
-  max-width: var(--container-max);
-  margin: 0 auto;
+small {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  display: block;
+  margin-top: var(--space-1);
 }
 
 /* ─── Nav ────────────────────────────────────────────────── */
@@ -59,10 +45,10 @@ small { font-size: var(--text-sm); color: var(--color-text-muted); }
 
 .nav__brand {
   font-size: var(--text-lg);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
 }
-.nav__brand:hover { text-decoration: none; color: var(--color-brand); }
+.nav__brand:hover { color: var(--color-brand); text-decoration: none; }
 
 .nav__links {
   display: flex;
@@ -76,6 +62,18 @@ small { font-size: var(--text-sm); color: var(--color-text-muted); }
 }
 .nav__link:hover { color: var(--color-text); text-decoration: none; }
 
+.nav__user {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ─── Page ───────────────────────────────────────────────── */
+.page {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-12) var(--container-padding);
+}
+
 /* ─── Buttons ────────────────────────────────────────────── */
 .btn {
   display: inline-block;
@@ -85,10 +83,11 @@ small { font-size: var(--text-sm); color: var(--color-text-muted); }
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: opacity 0.15s, transform 0.15s;
+  transition: background 0.15s, transform 0.1s;
   text-align: center;
+  line-height: 1.4;
 }
-.btn:hover { opacity: 0.9; text-decoration: none; }
+.btn:hover { text-decoration: none; }
 .btn:active { transform: translateY(1px); }
 
 .btn--primary {
@@ -97,15 +96,13 @@ small { font-size: var(--text-sm); color: var(--color-text-muted); }
 }
 .btn--primary:hover { background: var(--color-brand-dark); color: #fff; }
 
-.btn--sm { padding: var(--space-1) var(--space-3); font-size: var(--text-sm); }
-.btn--full { width: 100%; padding: var(--space-3) var(--space-4); font-size: var(--text-base); }
+.btn--sm   { padding: var(--space-1) var(--space-3); }
+.btn--full { width: 100%; padding: var(--space-3); font-size: var(--text-base); }
 
 /* ─── Forms ──────────────────────────────────────────────── */
-.form-group {
-  margin-bottom: var(--space-4);
-}
+.form-group { margin-bottom: var(--space-5); }
 
-label {
+.form-group label {
   display: block;
   font-size: var(--text-sm);
   font-weight: 500;
@@ -113,9 +110,7 @@ label {
   margin-bottom: var(--space-1);
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+.form-group input {
   width: 100%;
   padding: var(--space-3);
   border: 1px solid var(--color-border);
@@ -127,10 +122,10 @@ input[type="password"] {
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-input:focus {
+.form-group input:focus {
   outline: none;
   border-color: var(--color-brand);
-  box-shadow: 0 0 0 3px rgba(91, 110, 245, 0.15);
+  box-shadow: 0 0 0 3px rgba(91, 110, 245, 0.12);
 }
 
 /* ─── Alerts ─────────────────────────────────────────────── */
@@ -138,16 +133,14 @@ input:focus {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
   border: 1px solid transparent;
 }
-
 .alert--error {
   background: var(--color-error-bg);
   border-color: var(--color-error-border);
   color: var(--color-error);
 }
-
 .alert--success {
   background: var(--color-success-bg);
   border-color: var(--color-success-border);
@@ -163,28 +156,70 @@ input:focus {
   box-shadow: var(--shadow-sm);
 }
 
-.card--muted {
-  background: var(--color-surface-alt);
+.card__title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
 }
 
-.card--accent {
-  border-color: var(--color-brand);
+.card__body {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
 }
+
+.card--muted   { background: var(--color-surface-alt); }
+.card--accent  { border-color: var(--color-brand); }
+.card--link    { transition: box-shadow 0.15s, border-color 0.15s; display: block; }
+.card--link:hover { box-shadow: var(--shadow-md); border-color: var(--color-brand); text-decoration: none; }
 
 /* ─── Grid ───────────────────────────────────────────────── */
-.grid-2 {
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
   gap: var(--space-4);
 }
+.grid--2 { grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
 
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  gap: var(--space-4);
+/* ─── Section ────────────────────────────────────────────── */
+.section { margin-bottom: var(--space-16); }
+
+.section__title {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  margin-bottom: var(--space-6);
 }
 
-/* ─── Auth page ──────────────────────────────────────────── */
+.section__subtitle {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+.section__subtitle--complete    { color: #16a34a; }
+.section__subtitle--in-progress { color: var(--color-brand); }
+.section__subtitle--planned     { color: var(--color-text-muted); }
+
+/* ─── Page header ────────────────────────────────────────── */
+.page-header {
+  text-align: center;
+  margin-bottom: var(--space-16);
+}
+
+.page-header__title {
+  font-size: var(--text-5xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.page-header__subtitle {
+  margin-top: var(--space-4);
+  font-size: var(--text-xl);
+  color: var(--color-text-muted);
+}
+
+/* ─── Auth ───────────────────────────────────────────────── */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -203,31 +238,16 @@ input:focus {
   max-width: 26rem;
 }
 
-.auth-box h1 {
+.auth-box__title {
   font-size: var(--text-2xl);
+  font-weight: 700;
   text-align: center;
   margin-bottom: var(--space-6);
 }
 
-.auth-footer {
+.auth-box__footer {
   text-align: center;
   margin-top: var(--space-4);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
-
-/* ─── Section spacing ────────────────────────────────────── */
-.section { margin-bottom: var(--space-16); }
-
-.section__header {
-  margin-bottom: var(--space-6);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-/* ─── Status indicators ──────────────────────────────────── */
-.status { font-size: var(--text-xl); font-weight: 600; }
-.status--complete { color: #16a34a; }
-.status--in-progress { color: var(--color-brand); }
-.status--planned { color: var(--color-text-muted); }

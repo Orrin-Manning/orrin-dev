@@ -5,82 +5,80 @@
 {% block content %}
 <div class="page">
 
-  <header class="section" style="text-align: center;">
-    <h1>Learning Machine Learning</h1>
-    <p style="margin-top: var(--space-4); font-size: var(--text-xl); color: var(--color-text-muted);">
-      A personal journey through fundamental ML concepts and implementation
-    </p>
+  <header class="page-header">
+    <h1 class="page-header__title">Learning Machine Learning</h1>
+    <p class="page-header__subtitle">A personal journey through fundamental ML concepts and implementation</p>
   </header>
 
   <section class="section">
-    <h2 style="margin-bottom: var(--space-6);">Learning Progress</h2>
+    <h2 class="section__title">Learning Progress</h2>
 
-    <div style="margin-bottom: var(--space-8);">
-      <h3 class="status status--complete" style="margin-bottom: var(--space-4);">✓ Completed</h3>
-      <div class="grid-2">
+    <div class="section">
+      <h3 class="section__subtitle section__subtitle--complete">✓ Completed</h3>
+      <div class="grid grid--2">
         <div class="card">
-          <h4>Linear Regression</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">NumPy-based implementation with sample data generation</p>
+          <p class="card__title">Linear Regression</p>
+          <p class="card__body">NumPy-based implementation with sample data generation</p>
         </div>
         <div class="card">
-          <h4>Neural Networks Basics</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">PyTorch implementation with FashionMNIST classification</p>
+          <p class="card__title">Neural Networks Basics</p>
+          <p class="card__body">PyTorch implementation with FashionMNIST classification</p>
         </div>
         <div class="card">
-          <h4>Model Training & Evaluation</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">Training loops, loss functions, and model persistence</p>
+          <p class="card__title">Model Training & Evaluation</p>
+          <p class="card__body">Training loops, loss functions, and model persistence</p>
         </div>
         <div class="card">
-          <h4>PyTorch Fundamentals</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">Tensor operations, device handling, and data manipulation</p>
+          <p class="card__title">PyTorch Fundamentals</p>
+          <p class="card__body">Tensor operations, device handling, and data manipulation</p>
         </div>
       </div>
     </div>
 
-    <div style="margin-bottom: var(--space-8);">
-      <h3 class="status status--in-progress" style="margin-bottom: var(--space-4);">→ In Progress</h3>
-      <div class="grid-2">
+    <div class="section">
+      <h3 class="section__subtitle section__subtitle--in-progress">→ In Progress</h3>
+      <div class="grid grid--2">
         <div class="card card--accent">
-          <h4>FastAPI + GraphQL Architecture</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">Building web interfaces for ML models</p>
+          <p class="card__title">FastAPI + GraphQL Architecture</p>
+          <p class="card__body">Building web interfaces for ML models</p>
         </div>
       </div>
     </div>
 
-    <div>
-      <h3 class="status status--planned" style="margin-bottom: var(--space-4);">○ Planned</h3>
-      <div class="grid-2">
+    <div class="section">
+      <h3 class="section__subtitle section__subtitle--planned">○ Planned</h3>
+      <div class="grid grid--2">
         <div class="card card--muted">
-          <h4>Classification Algorithms</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">Logistic regression, decision trees, and ensemble methods</p>
+          <p class="card__title">Classification Algorithms</p>
+          <p class="card__body">Logistic regression, decision trees, and ensemble methods</p>
         </div>
         <div class="card card--muted">
-          <h4>Model Evaluation</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">Validation techniques, metrics, and performance analysis</p>
+          <p class="card__title">Model Evaluation</p>
+          <p class="card__body">Validation techniques, metrics, and performance analysis</p>
         </div>
         <div class="card card--muted">
-          <h4>Advanced Neural Networks</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">CNNs, RNNs, and other architectures</p>
+          <p class="card__title">Advanced Neural Networks</p>
+          <p class="card__body">CNNs, RNNs, and other architectures</p>
         </div>
         <div class="card card--muted">
-          <h4>Data Preprocessing</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">Feature engineering and data transformation techniques</p>
+          <p class="card__title">Data Preprocessing</p>
+          <p class="card__body">Feature engineering and data transformation techniques</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section>
+  <section class="section">
     <div class="card">
-      <h2 style="margin-bottom: var(--space-6);">Quick Links</h2>
-      <div class="grid-3">
-        <a href="/docs" class="card" style="display: block;">
-          <h4>API Documentation</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">FastAPI interactive docs</p>
+      <h2 class="section__title">Quick Links</h2>
+      <div class="grid grid--3">
+        <a href="/docs" class="card card--link">
+          <p class="card__title">API Documentation</p>
+          <p class="card__body">FastAPI interactive docs</p>
         </a>
         <div class="card card--muted">
-          <h4>Jupyter Notebooks</h4>
-          <p style="margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm);">Interactive ML experiments</p>
+          <p class="card__title">Jupyter Notebooks</p>
+          <p class="card__body">Interactive ML experiments</p>
         </div>
       </div>
     </div>
