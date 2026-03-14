@@ -1,8 +1,13 @@
+import logging
+
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing_extensions import Annotated
+
+logger = logging.getLogger(__name__)
 
 from app.db.session import get_db
 from app.db.crud.user import create_user, authenticate_user, get_user_by_email, get_user_by_id
@@ -86,12 +91,13 @@ async def register_submit(
 
         # Redirect to home page
         return RedirectResponse(url="/", status_code=303)
-    except Exception as e:
+    except (IntegrityError, SQLAlchemyError) as e:
+        logger.error("Registration failed due to database error: %s", e)
         new_csrf_token = generate_csrf_token(request)
         return templates.TemplateResponse(
             request=request,
             name="auth/register.html",
-            context={"error": f"Registration failed: {str(e)}", "csrf_token": new_csrf_token},
+            context={"error": "Registration failed. Please try again.", "csrf_token": new_csrf_token},
         )
 
 
